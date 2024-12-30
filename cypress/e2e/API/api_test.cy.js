@@ -1,8 +1,7 @@
 describe("API Testing with Cypress - PokeAPI", () => {
   const baseUrl = "https://pokeapi.co/api/v2/pokemon";
 
-  // Test para el método GET
-  it("GET - Should have a valid response format for Ditto", () => {
+  it("GET -  Debe tener un formato de respuesta válido para Ditto", () => {
     cy.request(`${baseUrl}/ditto`).then((response) => {
       expect(response.body).to.include.keys(
         "abilities",
@@ -20,23 +19,21 @@ describe("API Testing with Cypress - PokeAPI", () => {
     });
   });
 
-  // Test para el método POST
-  it("POST - Should not allow POST method", () => {
+  it("POST - No debe permitirse el método POST", () => {
     cy.request({
       method: "POST",
       url: baseUrl,
-      failOnStatusCode: false, // No falla el test si el status code no es 2xx
+      failOnStatusCode: false,
       body: {
         name: "new-pokemon",
         id: 9999,
       },
     }).then((response) => {
-      expect(response.status).to.be.oneOf([404, 405, 400]); // Ajusta para incluir 404
+      expect(response.status).to.be.oneOf([404, 405, 400]);
     });
   });
 
-  // Test para el método PUT
-  it("PUT - Should not allow PUT method", () => {
+  it("PUT - No debe permitirse el método PUT", () => {
     cy.request({
       method: "PUT",
       url: `${baseUrl}/ditto`,
@@ -45,23 +42,21 @@ describe("API Testing with Cypress - PokeAPI", () => {
         name: "updated-pokemon",
       },
     }).then((response) => {
-      expect(response.status).to.be.oneOf([404, 405, 400]); // Ajusta para incluir 404
+      expect(response.status).to.be.oneOf([404, 405, 400]);
     });
   });
 
-  // Test para el método DELETE
-  it("DELETE - Should not allow DELETE method", () => {
+  it("DELETE - No debe permitirse el método DELETE", () => {
     cy.request({
       method: "DELETE",
       url: `${baseUrl}/ditto`,
       failOnStatusCode: false,
     }).then((response) => {
-      expect(response.status).to.be.oneOf([404, 405, 400]); // Ajusta para incluir 404
+      expect(response.status).to.be.oneOf([404, 405, 400]);
     });
   });
 
-  // Validación de error con un recurso inexistente
-  it("GET - Should return 404 for non-existent Pokemon", () => {
+  it("GET - Debería devolver 404 por Pokemon inexistente", () => {
     cy.request({
       method: "GET",
       url: `${baseUrl}/nonexistent-pokemon`,
@@ -71,8 +66,7 @@ describe("API Testing with Cypress - PokeAPI", () => {
     });
   });
 
-  // Verificación de encabezados de respuesta
-  it("GET - Should return correct response headers", () => {
+  it("GET - Debe devolver cabeceras de respuesta correctas", () => {
     cy.request(`${baseUrl}/ditto`).then((response) => {
       expect(response.headers)
         .to.have.property("content-type")
@@ -83,17 +77,16 @@ describe("API Testing with Cypress - PokeAPI", () => {
     });
   });
 
-  // Verificar tiempo de respuesta
-  it("GET - Should respond within 500ms", () => {
+  it("GET - Debe responder en 500ms", () => {
     cy.request(`${baseUrl}/ditto`).then((response) => {
       expect(response.duration).to.be.lessThan(500);
     });
   });
 
-  it("GET - Should return 404 for invalid or missing Pokemon ID", () => {
+  it("GET - GET - Debería devolver 404 si el ID Pokemon no es válido o falta", () => {
     cy.request({
       method: "GET",
-      url: `${baseUrl}/-1`, // Caso límite
+      url: `${baseUrl}/-1`,
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(404);
@@ -101,7 +94,7 @@ describe("API Testing with Cypress - PokeAPI", () => {
 
     cy.request({
       method: "GET",
-      url: `${baseUrl}/invalidString`, // String no válido
+      url: `${baseUrl}/invalidString`,
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(404);
